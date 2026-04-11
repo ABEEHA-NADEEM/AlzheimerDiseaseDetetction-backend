@@ -102,3 +102,17 @@ def reject_doctor(request, user_id):
 def all_users(request):
     users = User.objects.all().order_by('-date_joined')
     return Response(UserSerializer(users, many=True).data)
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def delete_user(request, user_id):
+    if request.user.id == user_id:
+        return Response(
+            {'error': 'You cannot delete your own account.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return Response(
+        {'message': f'User {user.email} deleted successfully.'},
+        status=status.HTTP_200_OK
+    )
