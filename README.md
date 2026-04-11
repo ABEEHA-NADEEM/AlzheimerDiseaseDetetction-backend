@@ -30,6 +30,38 @@ This repository contains a full-stack Alzheimer’s disease detection applicatio
     - doctor
     - patient
 
+- Datastore: `Database models`
+
+The backend has two main Django models:
+
+### `accounts.User`
+Extends `AbstractUser` with role-based fields:
+
+- `role` — `CharField`, choices: `doctor`, `patient`, `admin`
+- `is_approved` — `BooleanField`
+- `specialization` — `CharField`, doctor specialty
+- `phone` — `CharField`
+- `date_of_birth` — `DateField`
+- `created_at` — `DateTimeField(auto_now_add=True)`
+
+### `diagnosis.DiagnosisResult`
+Stores MRI scan predictions and explainability output:
+
+- `doctor` — `ForeignKey` to `accounts.User` (doctor)
+- `patient` — `ForeignKey` to `accounts.User` (patient)
+- `patient_name` — `CharField`
+- `patient_age` — `IntegerField`
+- `patient_gender` — `CharField`
+- `mri_image` — `ImageField(upload_to='mri_uploads/')`
+- `predicted_class` — `CharField`
+- `confidence` — `FloatField`
+- `all_probabilities` — `JSONField`
+- `gradcam_image` — `TextField`
+- `shap_image` — `TextField`
+- `lime_image` — `TextField`
+- `created_at` — `DateTimeField(auto_now_add=True)`
+
+
 ## Features
 
 ### Admin
@@ -142,4 +174,5 @@ ADD-Frontend/
 - `GET /api/diagnoses/patient/reports/`
 - `GET /api/diagnoses/scans/<scan_id>/`
 
-
+### Datastore
+`The backend is designed to work with PostgreSQL and can be connected to a managed PostgreSQL service such as Supabase.`
